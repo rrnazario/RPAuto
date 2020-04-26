@@ -36,6 +36,7 @@
             this.rchCommands = new System.Windows.Forms.RichTextBox();
             this.btnStartStop = new System.Windows.Forms.Button();
             this.btnUp = new System.Windows.Forms.Button();
+            this.btnHelp = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // cbbProcess
@@ -110,11 +111,22 @@
             this.btnUp.UseVisualStyleBackColor = true;
             this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
             // 
+            // btnHelp
+            // 
+            this.btnHelp.Location = new System.Drawing.Point(396, 70);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Size = new System.Drawing.Size(99, 26);
+            this.btnHelp.TabIndex = 8;
+            this.btnHelp.Text = "Help";
+            this.btnHelp.UseVisualStyleBackColor = true;
+            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(502, 461);
+            this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.btnUp);
             this.Controls.Add(this.btnStartStop);
             this.Controls.Add(this.rchCommands);
@@ -145,6 +157,7 @@
         private System.Windows.Forms.RichTextBox rchCommands;
         private System.Windows.Forms.Button btnStartStop;
         private System.Windows.Forms.Button btnUp;
+        private System.Windows.Forms.Button btnHelp;
     }
 }
 

@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowsInput.Native;
 
 namespace RPAuto
 {
@@ -81,6 +82,27 @@ namespace RPAuto
         private void btnUp_Click(object sender, EventArgs e)
         {
             FillProcessCombo();
+        }
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            var helpFile = "help.txt";
+            if (!File.Exists(helpFile))
+            {
+                var msg = new StringBuilder("Commands:\n\n");
+
+                msg.Append("To use text free, use it without brackets.\n");
+                msg.Append("{WAIT:1000} = Time to wait between commands\n");
+                msg.Append("{ENTER} = Break lines\n");
+                msg.Append("{CONTROL,SHIFT,ALT:KEY} = To use modified keys. (Where KEY could be anything. Letters, numbers, etc. Example: {CONTROL,SHIFT:T} or {CONTROL:C})\n");
+                msg.Append("Available key names:\n\n");
+
+                Enum.GetValues(typeof(VirtualKeyCode)).Cast<VirtualKeyCode>().ToList().ForEach(f => msg.Append($"\t{f}\n"));
+
+                File.WriteAllText(helpFile, msg.ToString());
+            }
+
+            Process.Start(helpFile);            
         }
     }
 }
