@@ -77,7 +77,7 @@ namespace RPAuto.Helpers
             string keyStr = Clean(values[0]),
                    secondStatement = Clean(values[1]);
 
-            var modifiers = new string[] { "CONTROL", "ALT", "SHIFT" };
+            var modifiers = new string[] { "CONTROL", "ALT", "SHIFT", "LWIN", "RWIN" };
 
             if (modifiers.Any(a => a.Equals(keyStr.Split(',').First())))
             {
