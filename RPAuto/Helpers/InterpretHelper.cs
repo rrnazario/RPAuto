@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,61 +14,93 @@ namespace RPAuto.Helpers
     {
         private InputSimulator inputter;
         private IEnumerable<VirtualKeyCode> enumList = Enum.GetValues(typeof(VirtualKeyCode)).Cast<VirtualKeyCode>();
+        public List<System.Timers.Timer> timers;
         public InterpretHelper()
         {
             var key = new KeyboardSimulator(new InputSimulator());
             var mouse = new MouseSimulator(new InputSimulator());
 
             inputter = new InputSimulator(key, mouse, null);
+
+            timers = new List<System.Timers.Timer>();
         }
 
         public void Interpret(IEnumerable<string> textList)
         {
-
+            Interpret(string.Join("\n", textList));
+        }
+        public void Interpret(string fullText)
+        {
             var keyword = "";
-            foreach (var line in textList)
+
+            for (int index = 0; index < fullText.Length; index++)
             {
-                try
+                keyword += fullText[index];
+
+                if (keyword.StartsWith("{"))
                 {
-                    keyword = "";
-                    for (int index = 0; index < line.Length; index++)
+                    index++;
+                    while (fullText[index] != '}' && index < fullText.Length - 1)
                     {
-                        keyword += line[index];
+                        keyword += fullText[index];
+                        index++;
+                    }
+                    keyword += fullText[index];
 
-                        if (keyword.StartsWith("{"))
+                    if (keyword.Contains(":"))
+                    {
+                        if (keyword.ToUpper().StartsWith("{TIMER:"))
                         {
-                            index++;
-                            while (line[index] != '}')
-                            {
-                                keyword += line[index];
-                                index++;
-                            }
-                            keyword += line[index];
-
-                            if (keyword.Contains(":")) //Complex keywords                        
-                                interpretComplexKeys(keyword);
-                            else
-                                interpretSimpleKeys(keyword);
-
-                            inputter.Keyboard.Sleep(150);
+                            index = GenerateTimer(keyword, fullText, index);
                             keyword = "";
+                            continue;
                         }
                         else
-                        {
-                            typeFreeText(keyword);
-                            keyword = "";
-                        }
+                            interpretComplexKeys(keyword);
                     }
+                    else
+                        interpretSimpleKeys(keyword);
+
+                    inputter.Keyboard.Sleep(150);
+                    keyword = "";
                 }
-                catch (Exception exc)
+                else
                 {
-                    throw new Exception($"Erro em {line}, key = {keyword}.\n\n{exc.Message}\n\n\n{exc.StackTrace}");
+                    typeFreeText(keyword);
+                    keyword = "";
                 }
             }
+
+            timers.ForEach(timer => timer.Start());
+        }
+
+        private int GenerateTimer(string keyword, string fullString, int index)
+        {
+            var endTimerWord = "{TIMER}";
+            var endTimerIndex = fullString.ToUpper().IndexOf(endTimerWord, index);
+            var timerInstructions = fullString.Substring(index + 1, endTimerIndex - index - 1);
+
+            var timer = new System.Timers.Timer()
+            {
+                Interval = double.Parse(Clean(keyword.Split(':').Last())),
+                Enabled = false
+            };
+
+            timer.Elapsed += (s, e) =>
+            {
+                (s as System.Timers.Timer).Stop();
+                Interpret(timerInstructions.Split('\n'));
+            };
+
+            timers.Add(timer);
+
+            return endTimerIndex + endTimerWord.Length;
         }
 
         private void typeFreeText(string text)
         {
+            if (text == "\n") return;
+
             inputter.Keyboard.TextEntry(text);
             inputter.Keyboard.Sleep(100);
         }
@@ -75,7 +109,7 @@ namespace RPAuto.Helpers
             var values = text.Split(':');
 
             string keyStr = Clean(values[0]),
-                   secondStatement = Clean(values[1]);
+                   secondStatement = Clean(string.Join(":", values.Skip(1)));
 
             var modifiers = new string[] { "CONTROL", "ALT", "SHIFT", "LWIN", "RWIN" };
 
@@ -89,6 +123,24 @@ namespace RPAuto.Helpers
             {
                 case "WAIT":
                     inputter.Keyboard.Sleep(int.TryParse(secondStatement, out var passed) ? passed : 0);
+                    break;
+                case "OPEN":
+                    if (File.Exists(secondStatement))
+                        Process.Start(secondStatement);
+                    break;
+                case "TIMER":
+                    var timer = new System.Timers.Timer()
+                    {
+                        Interval = double.Parse(secondStatement),
+                        Enabled = false
+                    };
+
+                    timer.Elapsed += (s, e) =>
+                    {
+
+                    };
+
+                    timers.Add(timer);
                     break;
                 default:
                     typeFreeText(text);

@@ -17,6 +17,7 @@ namespace RPAuto
 {
     public partial class FrmMain : Form
     {
+        private InterpretHelper interpreter;
         public FrmMain()
         {
             InitializeComponent();
@@ -25,7 +26,6 @@ namespace RPAuto
         private void btnStartStop_Click(object sender, EventArgs e)
         {
             //Validate
-
             if (string.IsNullOrEmpty(rchCommands.Text))
             {
                 MessageBox.Show("No commands found, please, type it.", Text);
@@ -33,7 +33,13 @@ namespace RPAuto
                 return;
             }
 
-            Interpret();
+            if (rchCommands.Text.ToUpper().Contains("{TIMER:"))            
+                btnStartStop.Text = btnStartStop.Text == "Start" ? "Stop" : "Start";
+
+            if (btnStartStop.Text == "Stop")
+                Interpret();
+            else
+                StopTimers();
         }
 
         private void FrmMain_Load(object sender, EventArgs e)
@@ -67,16 +73,27 @@ namespace RPAuto
                 if (cbbProcess.SelectedIndex > 0)
                     SystemHelper.BringToFront(SystemHelper.FindProccessByDescription(cbbProcess.SelectedItem.ToString()));
 
-                new InterpretHelper().Interpret(rchCommands.Lines);
+                interpreter = new InterpretHelper();
+                interpreter.Interpret(rchCommands.Lines);
             }
             catch (Exception exc)
             {
-                File.WriteAllText($"Error {DateTime.Now:yyMMdd HHmmSS}.txt", exc.Message);                
+                File.WriteAllText($"Error {DateTime.Now:yyMMdd HHmmSS}.txt", exc.Message);
             }
             finally
             {
-                WindowState = FormWindowState.Normal;
+                if (!ckbPreventMax.Checked)
+                    WindowState = FormWindowState.Normal;
             }
+        }
+        private void StopTimers()
+        {
+            if (interpreter.timers != null && interpreter.timers.Count() > 0)
+                interpreter.timers.ForEach(timer => 
+                {
+                    timer.Stop();
+                    timer = null;
+                });
         }
 
         private void btnUp_Click(object sender, EventArgs e)
@@ -87,13 +104,18 @@ namespace RPAuto
         private void btnHelp_Click(object sender, EventArgs e)
         {
             var helpFile = "help.txt";
+
             if (!File.Exists(helpFile))
+                File.Delete(helpFile);
+
             {
                 var msg = new StringBuilder("Commands:\n\n");
 
                 msg.Append("To use text free, use it without brackets.\n");
                 msg.Append("{WAIT:1000} = Time to wait between commands\n");
                 msg.Append("{ENTER} = Break lines\n");
+                msg.Append("{OPEN:PATH} = Open a file, if it exists. Example: {Open:notepad}, {Open:Path\\To\\File}\n");
+                msg.Append("{TIMER:TIME} ... {COMMANDS} ... {TIMER} = Create a loop with inside commands that repeats every \"TIME\" interval. Example: {TIMER:3000}{OPEN:calc}{TIMER}\n");
                 msg.Append("{CONTROL,SHIFT,ALT,LWIN,RWIN:KEY} = To use modified keys. (Where KEY could be anything. Letters, numbers, etc. Example: {CONTROL,SHIFT:T} or {CONTROL:C})\n");
                 msg.Append("Available key names:\n\n");
 
@@ -102,7 +124,7 @@ namespace RPAuto
                 File.WriteAllText(helpFile, msg.ToString());
             }
 
-            Process.Start(helpFile);            
+            Process.Start(helpFile);
         }
     }
 }
