@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using WindowsInput;
 using WindowsInput.Native;
@@ -14,6 +15,9 @@ namespace RPAuto.Helpers
     {
         private InputSimulator inputter;
         private IEnumerable<VirtualKeyCode> enumList = Enum.GetValues(typeof(VirtualKeyCode)).Cast<VirtualKeyCode>();
+        private bool cancel = false;
+        public bool Cancel() => cancel = true;
+
         public List<System.Timers.Timer> timers;
         public InterpretHelper()
         {
@@ -35,6 +39,8 @@ namespace RPAuto.Helpers
 
             for (int index = 0; index < fullText.Length; index++)
             {
+                if (cancel) return;
+
                 keyword += fullText[index];
 
                 if (keyword.StartsWith("{"))
@@ -52,6 +58,13 @@ namespace RPAuto.Helpers
                         if (keyword.ToUpper().StartsWith("{TIMER:"))
                         {
                             index = GenerateTimer(keyword, fullText, index);
+                            keyword = "";
+                            continue;
+                        }
+                        else
+                        if (keyword.ToUpper().StartsWith("{REPEAT:"))
+                        {
+                            index = GenerateRepetition(keyword, fullText, index);
                             keyword = "";
                             continue;
                         }
@@ -74,6 +87,24 @@ namespace RPAuto.Helpers
             timers.ForEach(timer => timer.Start());
         }
 
+        private int GenerateRepetition(string keyword, string fullText, int index)
+        {
+            var endBlockWord = "{REPEAT}";
+            var endBlockIndex = fullText.ToUpper().IndexOf(endBlockWord, index);
+            var repeatInstructions = fullText.Substring(index + 1, endBlockIndex - index - 1);
+
+            var times = int.Parse(Clean(keyword.Split(':').Last()));
+
+            for (int i = 1; i <= times; i++)
+            {
+                if (cancel) return 0;
+                Interpret(repeatInstructions.Replace("{%}", i.ToString()).Split('\n'));
+                Thread.Sleep(1000);
+            }
+
+            return endBlockIndex + endBlockWord.Length;
+        }
+
         private int GenerateTimer(string keyword, string fullString, int index)
         {
             var endTimerWord = "{TIMER}";
@@ -86,10 +117,11 @@ namespace RPAuto.Helpers
                 Enabled = false
             };
 
+            int times = 1;
             timer.Elapsed += (s, e) =>
             {
-                (s as System.Timers.Timer).Stop();
-                Interpret(timerInstructions.Split('\n'));
+                Interpret(timerInstructions.Replace("{%}", times.ToString()).Split('\n'));
+                times++;
             };
 
             timers.Add(timer);
@@ -125,8 +157,11 @@ namespace RPAuto.Helpers
                     inputter.Keyboard.Sleep(int.TryParse(secondStatement, out var passed) ? passed : 0);
                     break;
                 case "OPEN":
-                    if (File.Exists(secondStatement))
+                    try
+                    {
                         Process.Start(secondStatement);
+                    }
+                    catch { }
                     break;
                 case "TIMER":
                     var timer = new System.Timers.Timer()

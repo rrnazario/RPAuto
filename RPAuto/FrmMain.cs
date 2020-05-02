@@ -18,6 +18,8 @@ namespace RPAuto
     public partial class FrmMain : Form
     {
         private InterpretHelper interpreter;
+        private string[] temporizerCommands = new string[] { "{TIMER:", "{REPEAT:" };
+
         public FrmMain()
         {
             InitializeComponent();
@@ -33,10 +35,12 @@ namespace RPAuto
                 return;
             }
 
-            if (rchCommands.Text.ToUpper().Contains("{TIMER:"))            
+            var temporizer = temporizerCommands.Any(command => rchCommands.Text.ToUpper().Contains(command));
+
+            if (temporizer)
                 btnStartStop.Text = btnStartStop.Text == "Start" ? "Stop" : "Start";
 
-            if (btnStartStop.Text == "Stop")
+            if (btnStartStop.Text == "Stop" || !temporizer)
                 Interpret();
             else
                 StopTimers();
@@ -92,6 +96,7 @@ namespace RPAuto
                 interpreter.timers.ForEach(timer => 
                 {
                     timer.Stop();
+                    timer.Dispose();
                     timer = null;
                 });
         }
@@ -125,6 +130,20 @@ namespace RPAuto
             }
 
             Process.Start(helpFile);
+        }
+
+        private void btnOpen_Click(object sender, EventArgs e)
+        {
+            var result = ofd.ShowDialog();
+
+            if (result == DialogResult.OK)
+                rchCommands.Text = File.ReadAllText(ofd.FileName);
+        }
+
+        private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            interpreter?.Cancel();
+            StopTimers();
         }
     }
 }

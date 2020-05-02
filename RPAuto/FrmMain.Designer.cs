@@ -39,6 +39,8 @@
             this.btnUp = new System.Windows.Forms.Button();
             this.btnHelp = new System.Windows.Forms.Button();
             this.ckbPreventMax = new System.Windows.Forms.CheckBox();
+            this.btnOpen = new System.Windows.Forms.Button();
+            this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // cbbProcess
@@ -112,7 +114,7 @@
             // btnUp
             // 
             this.btnUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnUp.Location = new System.Drawing.Point(541, 11);
+            this.btnUp.Location = new System.Drawing.Point(540, 11);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(39, 26);
             this.btnUp.TabIndex = 7;
@@ -123,7 +125,7 @@
             // btnHelp
             // 
             this.btnHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnHelp.Location = new System.Drawing.Point(519, 45);
+            this.btnHelp.Location = new System.Drawing.Point(518, 45);
             this.btnHelp.Name = "btnHelp";
             this.btnHelp.Size = new System.Drawing.Size(61, 26);
             this.btnHelp.TabIndex = 8;
@@ -143,11 +145,27 @@
             this.ckbPreventMax.Text = "Prevent this window backs";
             this.ckbPreventMax.UseVisualStyleBackColor = true;
             // 
+            // btnOpen
+            // 
+            this.btnOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOpen.Location = new System.Drawing.Point(518, 73);
+            this.btnOpen.Name = "btnOpen";
+            this.btnOpen.Size = new System.Drawing.Size(61, 26);
+            this.btnOpen.TabIndex = 10;
+            this.btnOpen.Text = "Open";
+            this.btnOpen.UseVisualStyleBackColor = true;
+            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
+            // 
+            // ofd
+            // 
+            this.ofd.Filter = "Any file|*.*";
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(585, 461);
+            this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.ckbPreventMax);
             this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.btnUp);
@@ -164,6 +182,7 @@
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "RPAuto 0.1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing);
             this.Load += new System.EventHandler(this.FrmMain_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -182,6 +201,8 @@
         private System.Windows.Forms.Button btnUp;
         private System.Windows.Forms.Button btnHelp;
         private System.Windows.Forms.CheckBox ckbPreventMax;
+        private System.Windows.Forms.Button btnOpen;
+        private System.Windows.Forms.OpenFileDialog ofd;
     }
 }
 
