@@ -19,6 +19,8 @@ namespace RPAuto
     {
         private InterpretHelper interpreter;
         private string[] temporizerCommands = new string[] { "{TIMER:", "{REPEAT:" };
+        private GlobalHotkey ghk;
+        Thread thread;
 
         public FrmMain()
         {
@@ -48,6 +50,9 @@ namespace RPAuto
 
         private void FrmMain_Load(object sender, EventArgs e)
         {
+            ghk = new GlobalHotkey(Constants.SHIFT, Keys.Escape, this);
+            ghk.Register();
+
             FillProcessCombo();
         }
 
@@ -77,12 +82,14 @@ namespace RPAuto
                 if (cbbProcess.SelectedIndex > 0)
                     SystemHelper.BringToFront(SystemHelper.FindProccessByDescription(cbbProcess.SelectedItem.ToString()));
 
-                interpreter = new InterpretHelper();
-                interpreter.Interpret(rchCommands.Lines);
+                //Start process
+                thread = new Thread(new ParameterizedThreadStart(CallInterpreterThread));
+                thread.Start(rchCommands.Lines);
+                
             }
             catch (Exception exc)
             {
-                File.WriteAllText($"Error {DateTime.Now:yyMMdd HHmmSS}.txt", exc.Message);
+                File.WriteAllText($"Error {DateTime.Now:yyMMdd HHmmSS}.txt", $"{exc.Message}\n\n{exc.StackTrace}\n\n{exc.InnerException?.Message}");
             }
             finally
             {
@@ -90,10 +97,24 @@ namespace RPAuto
                     WindowState = FormWindowState.Normal;
             }
         }
+
+        /// <summary>
+        /// Create a method to thread be aborted if needed.
+        /// </summary>
+        /// <param name="obj"></param>
+        private void CallInterpreterThread(object obj)
+        {
+            interpreter = new InterpretHelper();
+            interpreter.Interpret(obj as string[]);
+        }
+
+        /// <summary>
+        /// Stop all timers that were created on interpret method
+        /// </summary>
         private void StopTimers()
         {
-            if (interpreter.timers != null && interpreter.timers.Count() > 0)
-                interpreter.timers.ForEach(timer => 
+            if (interpreter?.timers != null && interpreter?.timers.Count() > 0)
+                interpreter?.timers.ForEach(timer =>
                 {
                     timer.Stop();
                     timer.Dispose();
@@ -142,8 +163,34 @@ namespace RPAuto
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            interpreter?.Cancel();
+            AbortProcess();
+        }
+
+        /// <summary>
+        /// Stop possible current executions.
+        /// </summary>
+        private void AbortProcess()
+        {
+            thread.Abort();
+            //interpreter?.Cancel();
             StopTimers();
         }
+
+        #region Methods to handle Windows HotKeys
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == Constants.WM_HOTKEY_MSG_ID)
+                AbortProcess();
+
+            base.WndProc(ref m);
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!ghk.Unregiser())
+                MessageBox.Show("Hotkey failed to unregister!");
+        }
+
+        #endregion
     }
 }

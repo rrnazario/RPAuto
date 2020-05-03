@@ -52,12 +52,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\GlobalHotkey.cs" />
     <Compile Include="Helpers\InterpretHelper.cs" />
     <Compile Include="Helpers\SystemHelper.cs" />
     <Compile Include="Program.cs" />
