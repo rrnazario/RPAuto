@@ -15,8 +15,6 @@ namespace RPAuto.Helpers
     {
         private InputSimulator inputter;
         private IEnumerable<VirtualKeyCode> enumList = Enum.GetValues(typeof(VirtualKeyCode)).Cast<VirtualKeyCode>();
-        private bool cancel = false;
-        public bool Cancel() => cancel = true;
 
         public List<System.Timers.Timer> timers;
         public InterpretHelper()
@@ -39,8 +37,6 @@ namespace RPAuto.Helpers
 
             for (int index = 0; index < fullText.Length; index++)
             {
-                if (cancel) return;
-
                 keyword += fullText[index];
 
                 if (keyword.StartsWith("{"))
@@ -97,7 +93,6 @@ namespace RPAuto.Helpers
 
             for (int i = 1; i <= times; i++)
             {
-                if (cancel) return 0;
                 Interpret(repeatInstructions.Replace("{%}", i.ToString()).Split('\n'));
                 Thread.Sleep(1000);
             }
@@ -162,21 +157,7 @@ namespace RPAuto.Helpers
                         Process.Start(secondStatement);
                     }
                     catch { }
-                    break;
-                case "TIMER":
-                    var timer = new System.Timers.Timer()
-                    {
-                        Interval = double.Parse(secondStatement),
-                        Enabled = false
-                    };
-
-                    timer.Elapsed += (s, e) =>
-                    {
-
-                    };
-
-                    timers.Add(timer);
-                    break;
+                    break;                
                 default:
                     typeFreeText(text);
                     break;
@@ -188,7 +169,7 @@ namespace RPAuto.Helpers
             string keyStr = Clean(values[0]),
                    secondStatement = Clean(values[1]);
 
-            var modifiers = keyStr.Split(',').Select(s => enumList.First(f => f.ToString().Equals($"{s}")));
+            var modifiers = keyStr.Split(',').Select(s => enumList.First(f => f.ToString().Equals($"{Translate(s)}")));
 
             VirtualKeyCode key = secondStatement.Length == 1
             ? enumList.First(f => f.ToString().Equals($"VK_{secondStatement}"))
@@ -214,6 +195,8 @@ namespace RPAuto.Helpers
             {
                 case "ENTER":
                     return "RETURN";
+                case "ALT":
+                    return "MENU";
                 default:
                     return input;
             }
