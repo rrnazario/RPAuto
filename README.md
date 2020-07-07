@@ -4,7 +4,7 @@ RPAuto is a simple implementation of RPA (Robotic Process Automation). Used on d
 
 # Screen
 
-![Screen](./Images/Screen.png)
+![Screen](./Images/screen.png)
 
 ## Elements
 
