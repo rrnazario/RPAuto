@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
             this.cbbProcess = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -41,6 +42,7 @@
             this.ckbPreventMax = new System.Windows.Forms.CheckBox();
             this.btnOpen = new System.Windows.Forms.Button();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
+            this.iml = new System.Windows.Forms.ImageList(this.components);
             this.SuspendLayout();
             // 
             // cbbProcess
@@ -51,7 +53,7 @@
             this.cbbProcess.FormattingEnabled = true;
             this.cbbProcess.Location = new System.Drawing.Point(104, 12);
             this.cbbProcess.Name = "cbbProcess";
-            this.cbbProcess.Size = new System.Drawing.Size(431, 24);
+            this.cbbProcess.Size = new System.Drawing.Size(486, 24);
             this.cbbProcess.TabIndex = 0;
             // 
             // label1
@@ -96,14 +98,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.rchCommands.Location = new System.Drawing.Point(8, 99);
             this.rchCommands.Name = "rchCommands";
-            this.rchCommands.Size = new System.Drawing.Size(570, 324);
+            this.rchCommands.Size = new System.Drawing.Size(626, 324);
             this.rchCommands.TabIndex = 5;
             this.rchCommands.Text = "";
             // 
             // btnStartStop
             // 
             this.btnStartStop.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnStartStop.Location = new System.Drawing.Point(120, 425);
+            this.btnStartStop.Location = new System.Drawing.Point(148, 427);
             this.btnStartStop.Name = "btnStartStop";
             this.btnStartStop.Size = new System.Drawing.Size(343, 30);
             this.btnStartStop.TabIndex = 6;
@@ -114,22 +116,24 @@
             // btnUp
             // 
             this.btnUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnUp.Location = new System.Drawing.Point(540, 11);
+            this.btnUp.ImageIndex = 0;
+            this.btnUp.ImageList = this.iml;
+            this.btnUp.Location = new System.Drawing.Point(595, 11);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(39, 26);
             this.btnUp.TabIndex = 7;
-            this.btnUp.Text = "Up";
             this.btnUp.UseVisualStyleBackColor = true;
             this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
             // 
             // btnHelp
             // 
             this.btnHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnHelp.Location = new System.Drawing.Point(518, 45);
+            this.btnHelp.ImageIndex = 1;
+            this.btnHelp.ImageList = this.iml;
+            this.btnHelp.Location = new System.Drawing.Point(573, 45);
             this.btnHelp.Name = "btnHelp";
             this.btnHelp.Size = new System.Drawing.Size(61, 26);
             this.btnHelp.TabIndex = 8;
-            this.btnHelp.Text = "Help";
             this.btnHelp.UseVisualStyleBackColor = true;
             this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
@@ -148,11 +152,12 @@
             // btnOpen
             // 
             this.btnOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOpen.Location = new System.Drawing.Point(518, 73);
+            this.btnOpen.ImageIndex = 2;
+            this.btnOpen.ImageList = this.iml;
+            this.btnOpen.Location = new System.Drawing.Point(573, 73);
             this.btnOpen.Name = "btnOpen";
             this.btnOpen.Size = new System.Drawing.Size(61, 26);
             this.btnOpen.TabIndex = 10;
-            this.btnOpen.Text = "Open";
             this.btnOpen.UseVisualStyleBackColor = true;
             this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
             // 
@@ -160,11 +165,20 @@
             // 
             this.ofd.Filter = "Any file|*.*";
             // 
+            // iml
+            // 
+            this.iml.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("iml.ImageStream")));
+            this.iml.TransparentColor = System.Drawing.Color.Transparent;
+            this.iml.Images.SetKeyName(0, "update.png");
+            this.iml.Images.SetKeyName(1, "help.png");
+            this.iml.Images.SetKeyName(2, "open.png");
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(585, 461);
+            this.BackColor = System.Drawing.Color.White;
+            this.ClientSize = new System.Drawing.Size(640, 461);
             this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.ckbPreventMax);
             this.Controls.Add(this.btnHelp);
@@ -203,6 +217,7 @@
         private System.Windows.Forms.CheckBox ckbPreventMax;
         private System.Windows.Forms.Button btnOpen;
         private System.Windows.Forms.OpenFileDialog ofd;
+        private System.Windows.Forms.ImageList iml;
     }
 }
 

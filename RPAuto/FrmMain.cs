@@ -1,15 +1,11 @@
 ﻿using RPAuto.Helpers;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsInput.Native;
 
@@ -56,6 +52,9 @@ namespace RPAuto
             FillProcessCombo();
         }
 
+        /// <summary>
+        /// Fill the combo with current running processes.
+        /// </summary>
         private void FillProcessCombo()
         {
             cbbProcess.Items.Clear();
@@ -68,6 +67,9 @@ namespace RPAuto
             cbbProcess.SelectedIndex = 0;
         }
 
+        /// <summary>
+        /// Performs key interpretation.
+        /// </summary>
         private void Interpret()
         {
             try
@@ -122,11 +124,21 @@ namespace RPAuto
                 });
         }
 
+        /// <summary>
+        /// Refresh process combo
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnUp_Click(object sender, EventArgs e)
         {
             FillProcessCombo();
         }
 
+        /// <summary>
+        /// It mounts a help file and show it.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnHelp_Click(object sender, EventArgs e)
         {
             var helpFile = "help.txt";
@@ -142,6 +154,7 @@ namespace RPAuto
                 msg.Append("{ENTER} = Break lines\n");
                 msg.Append("{OPEN:PATH} = Open a file, if it exists. Example: {Open:notepad}, {Open:Path\\To\\File}\n");
                 msg.Append("{TIMER:TIME} ... {COMMANDS} ... {TIMER} = Create a loop with inside commands that repeats every \"TIME\" interval. Example: {TIMER:3000}{OPEN:calc}{TIMER}\n");
+                msg.Append("{REPEAT:COUNT} ... {COMMANDS} ... {REPEAT} = Repeats a command block for COUNT times. Example: {REPEAT:5}{OPEN:calc}{REPEAT}\n");
                 msg.Append("{CONTROL,SHIFT,ALT,LWIN,RWIN:KEY} = To use modified keys. (Where KEY could be anything. Letters, numbers, etc. Example: {CONTROL,SHIFT:T} or {CONTROL:C})\n");
                 msg.Append("Available key names:\n\n");
 
@@ -158,7 +171,14 @@ namespace RPAuto
             var result = ofd.ShowDialog();
 
             if (result == DialogResult.OK)
-                rchCommands.Text = File.ReadAllText(ofd.FileName);
+                try
+                {
+                    rchCommands.Text = File.ReadAllText(ofd.FileName);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("It was impossible to read this file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -172,7 +192,6 @@ namespace RPAuto
         private void AbortProcess()
         {
             thread?.Abort();
-            //interpreter?.Cancel();
             StopTimers();
         }
 
