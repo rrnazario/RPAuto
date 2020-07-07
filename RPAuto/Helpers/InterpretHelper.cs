@@ -11,7 +11,7 @@ namespace RPAuto.Helpers
     public class InterpretHelper
     {
         private InputSimulator inputter;
-        private IEnumerable<VirtualKeyCode> enumList = Enum.GetValues(typeof(VirtualKeyCode)).Cast<VirtualKeyCode>();
+        private IEnumerable<VirtualKeyCode> keyCodes = Enum.GetValues(typeof(VirtualKeyCode)).Cast<VirtualKeyCode>();
         public InterpretHelper()
         {
             var key = new KeyboardSimulator(new InputSimulator());
@@ -22,7 +22,6 @@ namespace RPAuto.Helpers
 
         public void Interpret(IEnumerable<string> textList)
         {
-
             var keyword = "";
             foreach (var line in textList)
             {
@@ -101,11 +100,11 @@ namespace RPAuto.Helpers
             string keyStr = Clean(values[0]),
                    secondStatement = Clean(values[1]);
 
-            var modifiers = keyStr.Split(',').Select(s => enumList.First(f => f.ToString().Equals($"{s}")));
+            var modifiers = keyStr.Split(',').Select(s => keyCodes.First(f => f.ToString().Equals($"{s}")));
 
             VirtualKeyCode key = secondStatement.Length == 1
-            ? enumList.First(f => f.ToString().Equals($"VK_{secondStatement}"))
-            : enumList.First(f => f.ToString().Equals($"{secondStatement}"));
+            ? keyCodes.First(f => f.ToString().Equals($"VK_{secondStatement}"))
+            : keyCodes.First(f => f.ToString().Equals($"{secondStatement}"));
 
             inputter.Keyboard.ModifiedKeyStroke(modifiers, key);
 
@@ -114,7 +113,7 @@ namespace RPAuto.Helpers
         {
             text = Translate(Clean(text));
 
-            var modifier = enumList.FirstOrDefault(f => f.ToString().Equals($"{text}"));
+            var modifier = keyCodes.FirstOrDefault(f => f.ToString().Equals($"{text}"));
 
             inputter.Keyboard.KeyDown(modifier);
         }
