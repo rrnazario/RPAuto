@@ -12,11 +12,12 @@ RPAuto is a simple implementation of RPA (Robotic Process Automation). Used on d
 
 - **Start delay (seconds)** = A delay to RPA start to process commands.
 
-- **Prevent this window backs** = When your commands are ended up, the main screen will be maximized back if this option be marked.
+- **Prevent this window backs** = When your commands are ended up, the main screen will be maximized back if this option be marked. This is useful when you are using TIMER or REPEAT commands.
 
 - **Help** = Shows a file with these instructions.
 
 - **Open file** = Open a command set previous typed.
+- **Save file** = Save the current commands.
 
 - **Commands**:
 

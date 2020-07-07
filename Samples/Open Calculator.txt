@@ -1,0 +1,2 @@
+{Wait:1000}
+{Open:calc}

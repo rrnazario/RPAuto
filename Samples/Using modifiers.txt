@@ -1,0 +1,7 @@
+{Open:notepad}
+{Wait:1000}
+This text will be copied and pasted {Control:A}{Control:C}
+{Wait:1000}
+{Control:V}{ENTER}
+{Control:V}{ENTER}
+{Control:V}{ENTER}

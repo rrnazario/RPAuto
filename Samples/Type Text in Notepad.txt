@@ -1,0 +1,3 @@
+{Open:notepad}
+{Wait:1000}
+This is a sample of typed text on your notepad!

@@ -1,0 +1,5 @@
+{Open:notepad}
+{Wait:1000}
+{Repeat: 4}
+This is a repetition number {%}{ENTER}
+{Repeat}
