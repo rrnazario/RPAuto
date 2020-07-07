@@ -43,6 +43,8 @@
             this.btnOpen = new System.Windows.Forms.Button();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.iml = new System.Windows.Forms.ImageList(this.components);
+            this.btnSave = new System.Windows.Forms.Button();
+            this.svd = new System.Windows.Forms.SaveFileDialog();
             this.SuspendLayout();
             // 
             // cbbProcess
@@ -154,7 +156,7 @@
             this.btnOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOpen.ImageIndex = 2;
             this.btnOpen.ImageList = this.iml;
-            this.btnOpen.Location = new System.Drawing.Point(573, 73);
+            this.btnOpen.Location = new System.Drawing.Point(512, 71);
             this.btnOpen.Name = "btnOpen";
             this.btnOpen.Size = new System.Drawing.Size(61, 26);
             this.btnOpen.TabIndex = 10;
@@ -172,6 +174,23 @@
             this.iml.Images.SetKeyName(0, "update.png");
             this.iml.Images.SetKeyName(1, "help.png");
             this.iml.Images.SetKeyName(2, "open.png");
+            this.iml.Images.SetKeyName(3, "save.png");
+            // 
+            // btnSave
+            // 
+            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSave.ImageIndex = 3;
+            this.btnSave.ImageList = this.iml;
+            this.btnSave.Location = new System.Drawing.Point(573, 71);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(61, 26);
+            this.btnSave.TabIndex = 11;
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // svd
+            // 
+            this.svd.Filter = "Text file|*.txt";
             // 
             // FrmMain
             // 
@@ -179,6 +198,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(640, 461);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.ckbPreventMax);
             this.Controls.Add(this.btnHelp);
@@ -218,6 +238,8 @@
         private System.Windows.Forms.Button btnOpen;
         private System.Windows.Forms.OpenFileDialog ofd;
         private System.Windows.Forms.ImageList iml;
+        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.SaveFileDialog svd;
     }
 }
 

@@ -17,6 +17,7 @@ namespace RPAuto
         private string[] temporizerCommands = new string[] { "{TIMER:", "{REPEAT:" };
         private GlobalHotkey ghk;
         Thread thread;
+        string fileName;
 
         public FrmMain()
         {
@@ -174,6 +175,7 @@ namespace RPAuto
                 try
                 {
                     rchCommands.Text = File.ReadAllText(ofd.FileName);
+                    fileName = ofd.FileName;
                 }
                 catch (Exception)
                 {
@@ -211,5 +213,16 @@ namespace RPAuto
         }
 
         #endregion
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                var result = svd.ShowDialog();
+
+                if (result == DialogResult.OK)
+                    File.WriteAllText(svd.FileName, rchCommands.Text);
+            }
+        }
     }
 }

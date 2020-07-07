@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using WindowsInput;
 using WindowsInput.Native;
 
@@ -83,6 +80,13 @@ namespace RPAuto.Helpers
             timers.ForEach(timer => timer.Start());
         }
 
+        /// <summary>
+        /// Replace the commands inside repetition statement and return it.
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="fullText"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
         private int GenerateRepetition(string keyword, string fullText, int index)
         {
             var endBlockWord = "{REPEAT}";
@@ -100,6 +104,13 @@ namespace RPAuto.Helpers
             return endBlockIndex + endBlockWord.Length;
         }
 
+        /// <summary>
+        /// Generates a timer to timers set with the instructions inside of statement.
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="fullString"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
         private int GenerateTimer(string keyword, string fullString, int index)
         {
             var endTimerWord = "{TIMER}";

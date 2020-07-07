@@ -183,7 +183,7 @@ Available special keys:
 
 See some sample files at "Samples" folder on this project.
 
-
+**LIFE SAVER** : When you want aborting an execution, press **CONTROL** and **ESC** keys together.
 
 # Useful links
 
