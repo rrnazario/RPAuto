@@ -2,6 +2,11 @@
 
 RPAuto is a simple implementation of RPA (Robotic Process Automation). Used on day by day.
 
+# Download
+
+
+There is a [download version here](https://www.dropbox.com/s/jo96z2098twq57k/RPAuto.zip?dl=1).
+
 # Screen
 
 ![Screen](./Images/screen.png)
